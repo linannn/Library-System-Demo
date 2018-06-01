@@ -134,7 +134,13 @@ public class BookAction extends ActionSupport {
   }
   public String borrowBook() {
     int res = bs.borrowBook(borrowerID, userId, bookID);
-    Map<String, String> map = new HashMap<String,String>();
+    if(res == -1) {
+      return "error";
+    }
+    return SUCCESS;
+  }
+  public String returnBook() {
+    int res = bs.returnBook(borrowerID, userId, bookID);
     if(res == -1) {
       return "error";
     }

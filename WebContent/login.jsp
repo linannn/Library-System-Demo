@@ -43,11 +43,12 @@
 					<label for="userPwd" class="control-label">Password</label> 
 					<input class="form-control" name="user.passwd">
 				</div>
-				
-  <s:select 
+		<div class="form-group">
+     <s:select class="form-control"
     list="#{'borrower':'borrower', 'librarian':'librarian'}" 
     name="user.userTag" 
     value="borrower" />
+    </div>
 				<button type="submit" class="btn btn-primary btn-lg btn-block"
 					onclick="return login()">login</button>
 				<div class="signup-text">

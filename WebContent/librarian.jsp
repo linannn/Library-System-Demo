@@ -116,7 +116,20 @@
         </div>
         
         <div class="tab-pane" id="returnBook">
-          
+          <form action="actionReturnBook.action" method="post">
+          <input type="hidden" name="userId" value='<s:property value = "userId"/>' />
+            <div class="form-group">
+              <label for="inputUserID" class="control-label">borrowerID</label> <input
+                class="form-control" name="borrowerID">
+            </div>
+            <div class="form-group">
+              <label for="inputPassword" class="control-label">BookID</label>
+              <input class="form-control" name="bookID">
+             </div>
+            <div align="center">
+              <input type="submit" value="Return">
+            </div>
+          </form>
           
         </div>
       </div>

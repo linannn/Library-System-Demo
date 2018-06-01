@@ -34,6 +34,10 @@
       <result type="chain">actionLibrarianHome</result>
       <result name = "error">/error.jsp</result>
     </action>
+    <action name = "actionReturnBook" class = "action.BookAction" method = "returnBook">
+      <result type="chain">actionLibrarianHome</result>
+      <result name = "error">/error.jsp</result>    
+    </action>
   </package>
 
 </struts>
