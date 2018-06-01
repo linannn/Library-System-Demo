@@ -4,9 +4,7 @@ import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.Connection;
-import java.util.Date;
-import java.text.SimpleDateFormat;
-
+import java.util.Calendar;
 import model.User;
 import database.DBConn;
 
@@ -15,7 +13,12 @@ public class UserService {
     PreparedStatement pst = null;
     Connection conn = null;
     int res = -1;
-    SimpleDateFormat data = new SimpleDateFormat("yyyy-MM-dd");
+    Calendar cal=Calendar.getInstance(); 
+    String date,day,month,year; 
+    year =String.valueOf(cal.get(Calendar.YEAR));
+    month =String.valueOf(cal.get(Calendar.MONTH)+1); 
+    day =String.valueOf(cal.get(Calendar.DATE)); 
+    date = year+"-"+month+"-"+day;
     try {
       conn = DBConn.getConnection();
       String sql = "insert into borrower values(?,?,?,?,?,?,?)";
@@ -23,7 +26,7 @@ public class UserService {
       pst.setString(1, user.getID());
       pst.setString(2, user.getName());
       pst.setString(3, user.getPasswd());
-      pst.setString(4, data.format(new Date()));
+      pst.setString(4, date);
       pst.setString(5, user.getEmail());
       pst.setInt(6, 10);
       pst.setInt(7, 50);
@@ -90,5 +93,36 @@ public class UserService {
       e.printStackTrace();
     }
     return res;
+  }
+  public User getBorrower(String bID) {
+    String sql = "select * from borrower where uID = ?";
+    Connection conn = DBConn.getConnection();
+    PreparedStatement pst = null;
+    User borrower = new User();
+    ResultSet rs = null;
+    try {
+      pst = conn.prepareStatement(sql);
+      pst.setString(1, bID);
+      rs = pst.executeQuery();
+      if (rs.next()) {
+        //uID, name, bPassword, register_data, email, limit, credit_value
+        borrower.setID(rs.getString(1));
+        borrower.setName(rs.getString(2));
+        borrower.setRegisterDate(rs.getString(4));
+        borrower.setEmail(rs.getString(5));
+        System.out.println(rs.getString(4));
+        borrower.setLimit(rs.getInt(6));
+        borrower.setCredit(rs.getInt(7));
+      }
+      if(rs != null)
+        rs.close();
+      if(pst != null)
+        pst.close();
+      if(conn != null)
+        conn.close();
+    } catch(SQLException e) {
+      e.printStackTrace();
+    }
+    return borrower;
   }
 }

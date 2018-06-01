@@ -15,85 +15,73 @@
   href='http://fonts.googleapis.com/css?family=Roboto+Condensed:400,300,300italic,400italic,700,700italic'
   rel='stylesheet' type='text/css'>
 <script src="layer/layer/layer.js"></script>
-<title>Librarian</title>
+<title>Borrower</title>
 </head>
 <body class="login-bg">
   <div class="login-body">
     <div class="login-heading">
-      <h1>Librarian</h1>
+      <h1>Borrower</h1>
     </div>
     <div class="login-info">
       <ul class="nav nav-tabs">
-        <li class="active" ><a href="#addBook" data-toggle="tab">AddBook</a></li>
-        <li ><a href="#borrowBook"  data-toggle="tab">BorrowBook</a></li>
-        <li ><a href="#returnBook"  data-toggle="tab">ReturnBook</a></li>
+        <li class="active" ><a href="#personalInfo" data-toggle="tab">PersonalInfo</a></li>
+        <li ><a href="#borrowedBook"  data-toggle="tab">BorrowedBook</a></li>
+        <li ><a href="#borrowingBook"  data-toggle="tab">BorrowingBook</a></li>
       </ul>
       <div class="tab-content">
-        <div class="tab-pane active" id="addBook">
-          <form action="actionAddBook.action" method="post" id ="bookForm">
-            <input name="userId" value = '<s:property value = "userId"/>' />
-            <div class="form-group">
-              <label for="inputUserID" class="control-label">ISBN</label> <input
-                class="form-control" name="book.ISBN">
-            </div>
-            <div class="form-group">
-              <label for="inputPassword" class="control-label">Title</label>
-              <input class="form-control" name="book.title">
-            </div>
-            <div class="form-group">
-              <label for="inputPassword" class="control-label">Quantity</label> <input
-                class="form-control" name="book.quantity">
-            </div>
-            <div class="form-group">
-            <table width="100%">
-            <tr>
-              <td align="left"><label for="inputPassword" class="control-label">Author</label></td>
-              <td align="right"><label for="inputPassword" class="control-label" style="text-align:right">
-                <a href="javascript:addAuthorLayer();"><i class="fa fa-search nav_icon"></i>Add Author</a>
-              </label></td>
-              </tr>
-             </table>
-              <select name = 'book.authors[0].aID' class="form-control">
-               <s:iterator value = "authors" var = "authors" status = "sta">
-                 <option value ='<s:property value="%{#authors.aID}" />'>
-                 <s:property value="%{#authors.firstName}" /> <s:property value="%{#authors.lastName}" />
-                 </option>
-               </s:iterator>
-             </select>
-             </div>
-             <div class="form-group">
-              <table width="100%">
-               <tr>
-                <td align="left"><label for="inputPassword" class="control-label">Tag</label></td>
-                <td align="right"><label for="inputPassword" class="control-label" style="text-align:right">
-                          <a href="javascript:addTagLayer();"><i class="fa fa-search nav_icon"></i>Add Tag</a>
-                </label></td>
-                </tr>
-               </table>
-             <select name = 'book.tags[0].tagID' class="form-control">
-             <s:iterator value = "tags" var = "tags" status = "sta">
-               <option value ='<s:property value="%{#tags.tagID}" />'>
-               <s:property value="%{#tags.tag}" />
-               </option>
-             </s:iterator>
-             </select>
-             </div>
-             <div align="center">
-              <button type="submit" 
-              class="btn  btn-lg btn-primary  hvr-shutter-out-vertical"
-                onclick="addBookJson()">Add Book</button>
-              </div>
-          </form>
+        <div class="tab-pane active" id="personalInfo">
+         <s:property value = "borrower.name"/>
+         <s:property value = "borrower.email"/>
+         <s:property value = "borrower.registerDate"/>
+         <s:property value = "borrower.limit"/>
+         <s:property value = "borrower.credit"/>
         </div>
         
         
-        <div class="tab-pane" id="borrowBook">
+        <div class="tab-pane" id="borrowedBook">
+	        <s:iterator value = "borrowedBook" var = "book" status = "sta">
+	          <s:property value="%{#book.title}" />
+	          <br>
+	          <s:property value="%{#book.ISBN}" />
+            <br>
+            <s:property value="%{#book.quantity}" />
+            <br>
+            <s:iterator value="#book.authors" var="author" status="s">
+              <s:property value="%{#author.firstName}" /> <s:property value="%{#author.lastName}" />
+            </s:iterator>
+            <s:iterator value="#book.tags" var="tag" status="s">
+              <s:property value="%{#tag.tag}" />
+            </s:iterator>
+	        </s:iterator>
           
           
         </div>
         
-        <div class="tab-pane" id="returnBook">
-          
+        <div class="tab-pane" id="borrowingBook">
+          <s:iterator value = "borrowingBook" var = "book" status = "sta">
+            <s:property value="%{#book.title}" />
+            <br>
+            <s:property value="%{#book.ISBN}" />
+            <br>
+            <s:property value="%{#book.quantity}" />
+            <br>
+            <s:iterator value="#book.authors" var="author" status="s">
+              <s:property value="%{#author.firstName}" /> <s:property value="%{#author.lastName}" />
+            </s:iterator>
+            <s:iterator value="#book.tags" var="tag" status="s">
+              <s:property value="%{#tag.tag}" />
+            </s:iterator>
+            <form method="post" class="renewForm">
+		          <input type="hidden" name="userId" value='<s:property value = "userId"/>' />
+	            <input type="hidden" name="borrowerID" value='<s:property value = "userId"/>' />
+	            <input type="hidden" name="bookID" value='<s:property value="%{#book.bID}" />' />
+	            <div class = "renewButton">
+			          <button type="button"
+			          class="btn  btn-lg btn-primary  hvr-shutter-out-vertical"
+			          >Add Tag</button>
+		          </div>
+		        </form>
+          </s:iterator>
           
         </div>
       </div>
@@ -101,178 +89,46 @@
   </div>
   
   
-<div id="authorLayer" style="display: none">
-  <form Class="form-horizontal" theme="simple" method="post"
-    id="authorForm" >
-    <input type="hidden" name="userId" value='<s:property value = "userId"/>' />
-    <table>
-      <br>
-      <tr class="form-group">
-        <td class="col-sm-6">First Name</td>
-        <td class="col-sm-6">
-          <input type="text" Class="form-control" name="author.firstName"/>
-        </td>
-      <tr class="form-group">
-        <td class="col-sm-6">Last Name</td>
-        <td class="col-sm-6">
-          <input type="text" Class="form-control" name="author.lastName"/>
-        </td>
-      </tr>
-    </table>
-    <br>
-    <div class="form-group">
-      <div align="center">
-        <button type="button"
-          class="btn  btn-lg btn-primary  hvr-shutter-out-vertical"
-          onclick="jsonAddAuthor()">AddAuthor</button>
-      </div>
-    </div>
-  </form>
-</div>
-<div id="tagLayer" style="display: none">
-  <form Class="form-horizontal" theme="simple" method="post"
-    id="tagForm" >
-    <input type="hidden" name="userId" value='<s:property value = "userId"/>' />
-    <table id="pdo">
-      <br>
-      <tr class="form-group">
-        <td class="col-sm-6">Tag</td>
-        <td class="col-sm-6">
-          <input type="text" Class="form-control" name="tag.tag"/>
-        </td>
-    </table>
-    <br>
-    <div class="form-group">
-    <div class="col-sm-offset-1  col-sm-4"></div>
-      <div align="center">
-        <button type="button"
-          class="btn  btn-lg btn-primary  hvr-shutter-out-vertical"
-          onclick="addTagJson()">Add Tag</button>
-      </div>
-    </div>
-  </form>
-</div>
+
 <script>
-function addTagLayer(){
-  layer.open({
-        type:1,
-        title:"Add Author",
-        area:['400px','200px'],
-              shadeClose:true,
-              content:$("#tagLayer")
-      });
-}
-function addAuthorLayer(){
-    layer.open({
-        type:1,
-        title:"Add Author",
-        area:['400px','300px'],
-              shadeClose:true,
-              content:$("#authorLayer")
-      });
-}
-function addBookJson(){
-  alert("hello");
-    var formData = new FormData(document.getElementById("bookForm"));
-      $.ajax({
-        type : "post",
-        url : 'actionAddBook',
-        data : formData,
-        async : false,
-        cache : false,
-        contentType : false,
-        processData : false,
-        success : function(data){
-          var obj = JSON.parse(data);
-          layer.open({
-                  type: 1,
-                  title:"Add Book Message",
-                  skin: 'layui-layer-demo',
-                  closeBtn: 0,
-                  anim: 2,
-                  area:['240px','120px'],
-                  shadeClose: true,
-                  content: obj.result,
-                  end:function (){
-                    location.reload();
-                  }
-                });
-   
-        },
-        error : function(e){
-          msg="上传失败！";
-        }
-      });
-      get();
-}
-function addTagJson(){
-      var formData = new FormData(document.getElementById("tagForm"));
-        $.ajax({
-          type : "post",
-          url : 'actionAddTag',
-          data : formData,
-          async : false,
-          cache : false,
-          contentType : false,
-          processData : false,
-          success : function(data){
-            var obj = JSON.parse(data);
-            layer.open({
-                    type: 1,
-                    title:"Add Tag Message",
-                    skin: 'layui-layer-demo',
-                    closeBtn: 0,
-                    anim: 2,
-                    area:['240px','120px'],
-                    shadeClose: true,
-                    content: obj.result,
-                    end:function (){
-                      location.reload();
-                    }
-                  });
-     
-          },
-          error : function(e){
-            msg="上传失败！";
-          }
-        });
-        get();
-}
-function jsonAddAuthor(){
-  var formData = new FormData(document.getElementById("authorForm"));
-    $.ajax({
-      type : "post",
-      url : 'actionAddAuthor',
-      data : formData,
-      async : false,
-      cache : false,
-      contentType : false,
-      processData : false,
-      success : function(data){
-        var obj = JSON.parse(data);
-        layer.open({
-                type: 1,
-                title:"Add Author Message",
-                skin: 'layui-layer-demo',
-                closeBtn: 0,
-                anim: 2,
-                area:['240px','120px'],
-                shadeClose: true,
-                content: obj.result,
-                end:function (){
-                  location.reload();
-                }
-              });
- 
-      },
-      error : function(e){
-        msg="上传失败！";
-      }
-    });
-    get();
-  }
-</script>
-<script>
+$(document).ready(function(){
+    $('.renewButton').each(function(){
+        $(this).click(function(){
+          var geneAddData=$(this).parents('.renewForm')[0];
+          var formData = new FormData(geneAddData);
+             $.ajax({
+             type : "post",
+             url : 'actionRenewBook',
+             data : formData,
+             async : false,
+             cache : false,
+             contentType : false,
+             processData : false,
+             success : function(data){
+            	  var obj = JSON.parse(data);
+            	  layer.open({
+                      type: 1,
+                      title:"AddPdo Message",
+                      skin: 'layui-layer-demo',
+                      closeBtn: 0,
+                      anim: 2,
+                      area:['240px','120px'],
+                      shadeClose: true,
+                      content: obj.result,
+                      end: function () {
+                              location.reload();
+                          }
+                 });
+
+            },
+	          error : function(e){
+	              msg="上传失败！";
+	          }
+          });
+          get();
+        })
+      })
+  })
 </script>
 </body>
 </html>

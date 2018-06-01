@@ -1,4 +1,4 @@
-/*
+
 create database library;
 
 CREATE TABLE IF NOT EXISTS `library`.`borrower` (
@@ -79,7 +79,6 @@ CREATE TABLE IF NOT EXISTS `library`.`book_copy` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
-*/
 CREATE TABLE IF NOT EXISTS `library`.`borrow` (
   `uID` CHAR(10) NOT NULL,
   `lID` CHAR(10) NOT NULL,
@@ -92,9 +91,19 @@ CREATE TABLE IF NOT EXISTS `library`.`borrow` (
   PRIMARY KEY (`uID`, `lID`, `book_ISBN`, `book_ID`),
   INDEX `fk_borrow_book_copy1_idx` (`book_ISBN` ASC, `book_ID` ASC),
   INDEX `fk_borrow_librarian1_idx` (`lID` ASC),
+  CONSTRAINT `fk_borrow_borrower`
+    FOREIGN KEY (`uID`)
+    REFERENCES `library`.`borrower` (`uID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
   CONSTRAINT `fk_borrow_book_copy1`
     FOREIGN KEY (`book_ISBN` , `book_ID`)
     REFERENCES `library`.`book_copy` (`book_ISBN` , `bID`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_borrow_librarian1`
+    FOREIGN KEY (`lID`)
+    REFERENCES `library`.`librarian` (`lID`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;

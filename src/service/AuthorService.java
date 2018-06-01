@@ -61,7 +61,7 @@ public class AuthorService {
   }
 
   public List<Author> getAuthorByISBN(String ISBN){
-    String sql = "select * from is_author where ISBN = ?";
+    String sql = "select * from is_author where book_ISBN = ?";
     String sqlName = "select * from author where aID = ?";
     Connection conn = DBConn.getConnection();
     PreparedStatement pst = null;
@@ -75,7 +75,7 @@ public class AuthorService {
       while (rs.next()) {
         pstName = conn.prepareStatement(sqlName);
         pstName.setString(1, rs.getString(1));
-        ResultSet rsName = pst.executeQuery();
+        ResultSet rsName = pstName.executeQuery();
         while (rsName.next()) {
           author.setaID(rsName.getString(1));
           author.setFirstName(rsName.getString(2));;

@@ -38,6 +38,14 @@
       <result type="chain">actionLibrarianHome</result>
       <result name = "error">/error.jsp</result>    
     </action>
+    <action name = "actionBorrowerHome" class = "action.BookAction" method = "borrowerHome">
+      <result>/borrower.jsp</result>
+    </action>
+    <action name = "actionRenewBook" class = "action.BookAction" method = "renewBook">
+      <result type="json">
+        <param name = "root">returnRes</param>
+      </result>
+    </action>
   </package>
 
 </struts>

@@ -8,8 +8,15 @@ public class Book {
   private String title;
   private String quantity;
   private List<Tag> tags;
+  private String bID;
   public String getISBN() {
     return ISBN;
+  }
+  public String getbID() {
+    return bID;
+  }
+  public void setbID(String bID) {
+    this.bID = bID;
   }
   public void setISBN(String iSBN) {
     ISBN = iSBN;

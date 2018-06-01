@@ -55,7 +55,7 @@ public class TagService {
     return tags;
   }
   public List<Tag> getTagByISBN(String ISBN){
-    String sql = "select * from book_tag where ISBN = ?";
+    String sql = "select * from book_tag where book_ISBN = ?";
     String sqlName = "select * from tag where tagID = ?";
     Connection conn = DBConn.getConnection();
     PreparedStatement pst = null;
@@ -69,7 +69,7 @@ public class TagService {
       while (rs.next()) {
         pstName = conn.prepareStatement(sqlName);
         pstName.setString(1, rs.getString(1));
-        ResultSet rsName = pst.executeQuery();
+        ResultSet rsName = pstName.executeQuery();
         while (rsName.next()) {
           tag.setTagID(rs.getString(1));
           tag.setTag(rs.getString(2));

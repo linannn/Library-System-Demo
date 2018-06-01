@@ -4,7 +4,7 @@ public class User {
   private String ID;
   private String name;
   private String passwd;
-  private String registerData;
+  private String registerDate;
   private String email;
   private int limit;
   private int credit;
@@ -28,11 +28,11 @@ public class User {
   public void setPasswd(String passwd) {
     this.passwd = passwd;
   }
-  public String getRegisterData() {
-    return registerData;
+  public String getRegisterDate() {
+    return registerDate;
   }
-  public void setRegisterData(String registerData) {
-    this.registerData = registerData;
+  public void setRegisterDate(String registerData) {
+    this.registerDate = registerData;
   }
   public String getEmail() {
     return email;
