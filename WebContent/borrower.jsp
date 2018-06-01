@@ -6,6 +6,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<link href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.css" rel="stylesheet">
 <script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
 <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <link href="css/style.css" rel='stylesheet' type='text/css' />
@@ -18,77 +19,127 @@
 <title>Borrower</title>
 </head>
 <body class="login-bg">
-  <div class="login-body">
+  <div class="login-body" style="width:70%">
     <div class="login-heading">
       <h1>Borrower</h1>
     </div>
     <div class="login-info">
       <ul class="nav nav-tabs">
-        <li class="active" ><a href="#personalInfo" data-toggle="tab">PersonalInfo</a></li>
-        <li ><a href="#borrowedBook"  data-toggle="tab">BorrowedBook</a></li>
-        <li ><a href="#borrowingBook"  data-toggle="tab">BorrowingBook</a></li>
+        <li class="active" ><a href="#personalInfo" data-toggle="tab">Personal Info</a></li>
+        <li ><a href="#borrowedBook"  data-toggle="tab">Borrowed Book</a></li>
+        <li ><a href="#borrowingBook"  data-toggle="tab">Borrowing Book</a></li>
       </ul>
       <div class="tab-content">
         <div class="tab-pane active" id="personalInfo">
-         <s:property value = "borrower.name"/>
-         <s:property value = "borrower.email"/>
-         <s:property value = "borrower.registerDate"/>
-         <s:property value = "borrower.limit"/>
-         <s:property value = "borrower.credit"/>
+        <table class="table table-striped" style="width:80%">
+			    <tbody>
+			    <tr>
+			        <td>Name</td>
+			        <td><s:property value = "borrower.name"/></td>
+			    </tr>
+			    <tr>
+			        <td>E-mail</td>
+			        <td><s:property value = "borrower.email"/></td>
+			    </tr>
+			    <tr>
+			        <td>Register Date</td>
+			        <td><s:property value = "borrower.registerDate"/></td>
+			    </tr>
+			    <tr>
+              <td>Limit</td>
+              <td><s:property value = "borrower.limit"/></td>
+          </tr>
+          <tr>
+              <td>Credit</td>
+              <td><s:property value = "borrower.credit"/></td>
+          </tr>
+			    </tbody>
+			   </table>
         </div>
         
         
         <div class="tab-pane" id="borrowedBook">
-	        <s:iterator value = "borrowedBook" var = "book" status = "sta">
-	          <s:property value="%{#book.title}" />
-	          <br>
-	          <s:property value="%{#book.ISBN}" />
-            <br>
-            <s:property value="%{#book.quantity}" />
-            <br>
-            <s:iterator value="#book.authors" var="author" status="s">
-              <s:property value="%{#author.firstName}" /> <s:property value="%{#author.lastName}" />
-            </s:iterator>
-            <s:iterator value="#book.tags" var="tag" status="s">
-              <s:property value="%{#tag.tag}" />
-            </s:iterator>
-	        </s:iterator>
-          
-          
+					<table class="table table-striped">
+					    <thead>
+					    <tr>
+					        <th>Title</th>
+					        <th>ISBN</th>
+					        <th>Quantity</th>
+					        <th>Author</th>
+					        <th>Tag</th>
+					    </tr>
+					    </thead>
+					    <tbody>
+					    <s:iterator value = "borrowedBook" var = "book" status = "sta">
+						    <tr>
+						    <td><s:property value="%{#book.title}" /></td>
+						    <td><s:property value="%{#book.ISBN}" /></td>
+						    <td><s:property value="%{#book.quantity}" /></td>
+						    <td>
+							    <s:iterator value="#book.authors" var="author" status="s">
+	                  <s:property value="%{#author.firstName}" /> <s:property value="%{#author.lastName}" />
+	                </s:iterator>
+                </td>
+						    <td>
+                  <s:iterator value="#book.tags" var="tag" status="s">
+                    <s:property value="%{#tag.tag}" />
+                  </s:iterator>
+						    </td>
+						    </tr>
+					    </s:iterator>
+					    </tbody>
+					</table>
         </div>
         
         <div class="tab-pane" id="borrowingBook">
-          <s:iterator value = "borrowingBook" var = "book" status = "sta">
-            <s:property value="%{#book.title}" />
-            <br>
-            <s:property value="%{#book.ISBN}" />
-            <br>
-            <s:property value="%{#book.quantity}" />
-            <br>
-            <s:iterator value="#book.authors" var="author" status="s">
-              <s:property value="%{#author.firstName}" /> <s:property value="%{#author.lastName}" />
-            </s:iterator>
-            <s:iterator value="#book.tags" var="tag" status="s">
-              <s:property value="%{#tag.tag}" />
-            </s:iterator>
-            <form method="post" class="renewForm">
-		          <input type="hidden" name="userId" value='<s:property value = "userId"/>' />
-	            <input type="hidden" name="borrowerID" value='<s:property value = "userId"/>' />
-	            <input type="hidden" name="bookID" value='<s:property value="%{#book.bID}" />' />
-	            <div class = "renewButton">
-			          <button type="button"
-			          class="btn  btn-lg btn-primary  hvr-shutter-out-vertical"
-			          >Add Tag</button>
-		          </div>
-		        </form>
-          </s:iterator>
-          
+          <table class="table table-striped">
+              <thead>
+              <tr>
+                  <th>Title</th>
+                  <th>ISBN</th>
+                  <th>Quantity</th>
+                  <th>Author</th>
+                  <th>Tag</th>
+                  <th>Operation</th>
+              </tr>
+              </thead>
+                <s:iterator value = "borrowingBook" var = "book" status = "sta">
+                  <tr>
+                    <td style="vertical-align: middle"><s:property value="%{#book.title}" /></td>
+                    <td style="vertical-align: middle"><s:property value="%{#book.ISBN}" /></td>
+                    <td style="vertical-align: middle"><s:property value="%{#book.quantity}" /></td>
+                    <td style="vertical-align: middle">
+					            <s:iterator value="#book.authors" var="author" status="s">
+					              <s:property value="%{#author.firstName}" /> <s:property value="%{#author.lastName}" />
+					            </s:iterator>
+                    </td>
+                    <td style="vertical-align: middle">
+					            <s:iterator value="#book.tags" var="tag" status="s">
+					              <s:property value="%{#tag.tag}" />
+					            </s:iterator>
+                    </td>
+                    <td style="vertical-align: middle">
+				              <form method="post" class="renewForm">
+					              <input type="hidden" name="userId" value='<s:property value = "userId"/>' />
+					              <input type="hidden" name="borrowerID" value='<s:property value = "userId"/>' />
+					              <input type="hidden" name="bookID" value='<s:property value="%{#book.bID}" />' />
+					              <div class = "renewButton">
+					                <button type="button"
+					                class="btn btn-default">
+					                 renew
+					                </button>
+					              </div>
+				              </form>
+                    </td>
+                  </tr>
+                </s:iterator>
+              <tbody>
+              </tbody>
+          </table>
         </div>
       </div>
     </div>
   </div>
-  
-  
 
 <script>
 $(document).ready(function(){

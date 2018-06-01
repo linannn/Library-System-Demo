@@ -18,15 +18,15 @@
 <title>Librarian</title>
 </head>
 <body class="login-bg">
-  <div class="login-body">
+  <div class="login-body" style="width:70%">
     <div class="login-heading">
       <h1>Librarian</h1>
     </div>
     <div class="login-info">
       <ul class="nav nav-tabs">
-        <li class="active" ><a href="#addBook" data-toggle="tab">AddBook</a></li>
-        <li ><a href="#borrowBook"  data-toggle="tab">BorrowBook</a></li>
-        <li ><a href="#returnBook"  data-toggle="tab">ReturnBook</a></li>
+        <li class="active" ><a href="#addBook" data-toggle="tab">Add Book</a></li>
+        <li ><a href="#borrowBook"  data-toggle="tab">Borrow Book</a></li>
+        <li ><a href="#returnBook"  data-toggle="tab">Return Book</a></li>
       </ul>
       <div class="tab-content">
         <div class="tab-pane active" id="addBook">

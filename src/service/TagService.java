@@ -56,10 +56,10 @@ public class TagService {
   }
   public List<Tag> getTagByISBN(String ISBN){
     String sql = "select * from book_tag where book_ISBN = ?";
-    String sqlName = "select * from tag where tagID = ?";
+    String sqlTag = "select * from tag where tagID = ?";
     Connection conn = DBConn.getConnection();
     PreparedStatement pst = null;
-    PreparedStatement pstName = null;
+    PreparedStatement pstTag = null;
     List<Tag> tags = new ArrayList<Tag>();
     Tag tag = new Tag();
     try {
@@ -67,12 +67,13 @@ public class TagService {
       pst.setString(1, ISBN);
       ResultSet rs = pst.executeQuery();
       while (rs.next()) {
-        pstName = conn.prepareStatement(sqlName);
-        pstName.setString(1, rs.getString(1));
-        ResultSet rsName = pstName.executeQuery();
-        while (rsName.next()) {
-          tag.setTagID(rs.getString(1));
-          tag.setTag(rs.getString(2));
+        pstTag = conn.prepareStatement(sqlTag);
+        pstTag.setString(1, rs.getString(2));
+        ResultSet rsTag = pstTag.executeQuery();
+        while (rsTag.next()) {
+          tag.setTagID(rsTag.getString(1));
+          tag.setTag(rsTag.getString(2));
+          System.out.println(tag.getTag());
           tags.add(tag);
         }
       }
