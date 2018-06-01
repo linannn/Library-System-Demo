@@ -1,0 +1,213 @@
+package service;
+
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Iterator;
+import java.util.List;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Connection;
+
+import model.Author;
+import model.Book;
+import model.Tag;
+import database.DBConn;
+
+public class BookService {
+  public int addBook(Book book) {
+    PreparedStatement pst = null;
+    Connection conn = null;
+    int res = -1;
+    try {
+      conn = DBConn.getConnection();
+      String sql = "insert into book values(?,?,?)";
+      pst = conn.prepareStatement(sql);
+      pst.setString(1, book.getISBN());
+      pst.setString(2, book.getTitle());
+      pst.setString(3, book.getQuantity());
+      res = pst.executeUpdate();
+      if(pst != null)
+        pst.close();
+      if(conn != null)
+        conn.close();
+    }catch(SQLException e) {
+      e.printStackTrace();
+    }
+    try {
+      conn = DBConn.getConnection();
+      String sql = "insert into is_author values(?,?)";
+      Iterator<Author> it = book.getAuthors().iterator();
+      while (it.hasNext()) {
+        pst = conn.prepareStatement(sql);
+        pst.setString(1, it.next().getaID());
+        pst.setString(2, book.getISBN());
+        res = pst.executeUpdate();
+      }
+      if(pst != null)
+        pst.close();
+      if(conn != null)
+        conn.close();
+    }catch(SQLException e) {
+      e.printStackTrace();
+    }
+    try {
+      conn = DBConn.getConnection();
+      String sql = "insert into book_tag values(?,?)";
+      Iterator<Tag> it = book.getTags().iterator();
+      while (it.hasNext()) {
+        pst = conn.prepareStatement(sql);
+        pst.setString(1, book.getISBN());
+        pst.setString(2, it.next().getTagID());
+        res = pst.executeUpdate() ;
+      }
+      if(pst != null)
+        pst.close();
+      if(conn != null)
+        conn.close();
+    }catch(SQLException e) {
+      e.printStackTrace();
+    }
+    return res;
+  }
+  
+  public List<Book> queryBook(String msg, String info) {
+    String sql = "select * from book where ? like '%?%'";
+    Connection conn = DBConn.getConnection();
+    PreparedStatement pst = null;
+    ResultSet rs = null;
+    List<Book> books = new ArrayList<Book>();
+    Book book = new Book();
+    try {
+      pst = conn.prepareStatement(sql);
+      pst.setString(1, msg);
+      pst.setString(2, info);
+      rs = pst.executeQuery();
+      while (rs.next()) {
+        book.setISBN(rs.getString(1));
+        book.setTitle(rs.getString(2));
+        book.setQuantity(rs.getString(3));
+        book.setAuthors(new AuthorService().getAuthorByISBN(rs.getString(1)));
+        book.setTags(new TagService().getTagByISBN(rs.getString(1)));
+        
+        books.add(book);
+      }
+      if(rs != null)
+        rs.close();
+      if(pst != null)
+        pst.close();
+      if(conn != null)
+        conn.close();
+    } catch(SQLException e) {
+      e.printStackTrace();
+    }
+    return books;
+  }
+  
+  public int addBookCopy(String ISBN, String location, int bookNumb) {
+    PreparedStatement pst = null;
+    Connection conn = null;
+    int res = -1;
+    try {
+      conn = DBConn.getConnection();
+      String sql = "insert into book_copy values(?,null,?,0)";
+      pst = conn.prepareStatement(sql);
+      pst.setString(1, ISBN);
+      pst.setString(2, location);
+      for (int i = 0; i < bookNumb; i++) {
+        res = pst.executeUpdate();
+      }
+      if(pst != null)
+        pst.close();
+      if(conn != null)
+        conn.close();
+    }catch(SQLException e) {
+      e.printStackTrace();
+    }
+    return res;
+  }
+  public int borrowBook(String borrowID, String lID, String bookID) {
+    PreparedStatement pst = null;
+    Connection conn = null;
+    ResultSet rs = null;
+    String ISBN = null;
+    int res = -1;
+    String sql = "select book_ISBN from book_copy where bID = ?";
+    String sqlBorrow = "insert into borrow values (?,?,?,?,?,null,0,0)";
+    try {
+      conn = DBConn.getConnection();
+      pst = conn.prepareStatement(sql);
+      pst.setString(1, bookID);
+      rs = pst.executeQuery();
+      if(rs.next()) {
+        ISBN = rs.getString(1);
+      } else {
+        return -1;
+      }
+      if(conn != null)
+        conn.close();
+      if(pst != null)
+        pst.close();
+      if(rs != null)
+        rs.close();
+    }catch(SQLException e) {
+      e.printStackTrace();
+    }
+    try {
+      conn = DBConn.getConnection();
+      pst = conn.prepareStatement(sqlBorrow);
+      System.out.println("111");
+      pst.setString(1, lID);
+      pst.setString(2, borrowID);
+      pst.setString(3, ISBN);
+      pst.setString(4, bookID);
+      pst.setString(5, getDate());
+      res = pst.executeUpdate();
+      if(pst != null)
+        pst.close();
+      if(conn != null)
+        conn.close();
+    }catch(SQLException e) {
+      e.printStackTrace();
+    }
+    if (res == -1) {
+        return -1;
+    }
+    if (setBorrow(1, bookID) == -1) {
+      return -1;
+    }
+    return 1;
+  }
+  public String getDate() {
+    Calendar cal=Calendar.getInstance(); 
+    String date,day,month,year; 
+    year =String.valueOf(cal.get(Calendar.YEAR));
+    month =String.valueOf(cal.get(Calendar.MONTH)+1); 
+    day =String.valueOf(cal.get(Calendar.DATE)); 
+    date = year+"-"+month+"-"+day;
+    return date;
+  }
+  public int setBorrow(int borrow, String bID) {
+    PreparedStatement pst = null;
+    Connection conn = null;
+    int res = -1;
+    String sql = "update book_copy set is_borrowed = ? where bID = ?";
+    try {
+      conn = DBConn.getConnection();
+      pst = conn.prepareStatement(sql);
+      pst.setInt(1, borrow);
+      pst.setString(2, bID);
+      res = pst.executeUpdate();
+      if(pst != null)
+        pst.close();
+      if(conn != null)
+        conn.close();
+    }catch(SQLException e) {
+      e.printStackTrace();
+    }
+    if (res == -1) {
+      return -1;
+    }
+    return 1;
+  }
+}

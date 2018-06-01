@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE struts PUBLIC
+        "-//Apache Software Foundation//DTD Struts Configuration 2.5//EN"
+        "http://struts.apache.org/dtds/struts-2.5.dtd">
+<struts>
+  <package name = "library" extends = "struts-default,json-default" namespace = "/">
+    <action name = "actionRegister" class = "action.UserAction" method = "register">
+      <result>/login.jsp</result>
+      <result name = "error">/error.jsp</result>
+    </action>
+    <action name = "actionLogin" class = "action.UserAction" method = "login">
+      <result name = "borrower" type = "chain">actionBorrowerHome</result>
+      <result name = "librarian" type = "chain">actionLibrarianHome</result>
+      <result name = "error">/error.jsp</result>
+    </action>
+    <action name = "actionLibrarianHome" class = "action.BookAction" method = "librarianHome">
+      <result>/librarian.jsp</result>
+    </action>
+    <action name = "actionAddAuthor" class = "action.BookAction" method = "addAuthor">
+      <result type="json">
+        <param name = "root">returnRes</param>
+      </result>
+    </action>
+    <action name = "actionAddTag" class = "action.BookAction" method = "addTag">
+      <result type="json">
+        <param name = "root">returnRes</param>
+      </result>
+    </action>
+    <action name = "actionAddBook" class = "action.BookAction" method = "addBook">
+      <result type="chain">actionLibrarianHome</result>
+      <result name = "error">/error.jsp</result>
+    </action>
+    <action name = "actionBorrowBook" class = "action.BookAction" method = "borrowBook">
+      <result type="chain">actionLibrarianHome</result>
+      <result name = "error">/error.jsp</result>
+    </action>
+  </package>
+
+</struts>
