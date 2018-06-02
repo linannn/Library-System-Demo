@@ -3,6 +3,7 @@ package action;
 import model.Tag;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -28,6 +29,9 @@ public class BookAction extends ActionSupport {
   private String bookID;
   private List<Book> borrowedBook;
   private List<Book> borrowingBook;
+  private String resultBook;
+  private String msg;
+  private String info;
   private User borrower;
   private AuthorService as = new AuthorService();
   private BookService bs = new BookService();
@@ -35,6 +39,24 @@ public class BookAction extends ActionSupport {
   private UserService us = new UserService();
   public List<Book> getBorrowedBook() {
     return borrowedBook;
+  }
+  public String getResultBook() {
+    return resultBook;
+  }
+  public void setResultBook(String resultBook) {
+    this.resultBook = resultBook;
+  }
+  public String getMsg() {
+    return msg;
+  }
+  public void setMsg(String msg) {
+    this.msg = msg;
+  }
+  public String getInfo() {
+    return info;
+  }
+  public void setInfo(String info) {
+    this.info = info;
   }
   public User getBorrower() {
     return borrower;
@@ -176,6 +198,13 @@ public class BookAction extends ActionSupport {
       map.put("result", "Renew Succeed");
     }
     returnRes = JSONObject.fromObject(map).toString();
+    return SUCCESS;
+  }
+  public String queryBook() {
+    Map<String, List<Book>> result = new LinkedHashMap<String, List<Book>>();
+    List<Book> books = bs.queryBook(msg, info);
+    result.put("result", books);
+    resultBook = JSONObject.fromObject(result).toString();
     return SUCCESS;
   }
 }

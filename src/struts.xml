@@ -44,6 +44,11 @@
         <param name = "root">returnRes</param>
       </result>
     </action>
+    <action name = "actionQueryBook" class = "action.BookAction" method = "queryBook">
+      <result type="json">
+        <param name = "root">resultBook</param>
+      </result>
+    </action>
   </package>
 
 </struts>

@@ -27,6 +27,7 @@
         <li class="active" ><a href="#addBook" data-toggle="tab">Add Book</a></li>
         <li ><a href="#borrowBook"  data-toggle="tab">Borrow Book</a></li>
         <li ><a href="#returnBook"  data-toggle="tab">Return Book</a></li>
+        <li ><a href="#queryBook" data-toggle="tab">Query Book</a></li>
       </ul>
       <div class="tab-content">
         <div class="tab-pane active" id="addBook">
@@ -48,28 +49,28 @@
             <table width="100%">
             <tr>
               <td align="left"><label for="inputPassword" class="control-label">Author</label></td>
-	            <td align="right"><label for="inputPassword" class="control-label" style="text-align:right">
-	              <a href="javascript:addAuthorLayer();"><i class="fa fa-search nav_icon"></i>Add Author</a>
-	            </label></td>
-	            </tr>
-	           </table>
-	            <select name = 'book.authors[0].aID' class="form-control">
-	             <s:iterator value = "authors" var = "authors" status = "sta">
-	               <option value ='<s:property value="%{#authors.aID}" />'>
-	               <s:property value="%{#authors.firstName}" /> <s:property value="%{#authors.lastName}" />
-	               </option>
-	             </s:iterator>
+              <td align="right"><label for="inputPassword" class="control-label" style="text-align:right">
+                <a href="javascript:addAuthorLayer();"><i class="fa fa-search nav_icon"></i>Add Author</a>
+              </label></td>
+              </tr>
+             </table>
+              <select name = 'book.authors[0].aID' class="form-control">
+               <s:iterator value = "authors" var = "authors" status = "sta">
+                 <option value ='<s:property value="%{#authors.aID}" />'>
+                 <s:property value="%{#authors.firstName}" /> <s:property value="%{#authors.lastName}" />
+                 </option>
+               </s:iterator>
              </select>
              </div>
              <div class="form-group">
               <table width="100%">
-	             <tr>
-	              <td align="left"><label for="inputPassword" class="control-label">Tag</label></td>
-	              <td align="right"><label for="inputPassword" class="control-label" style="text-align:right">
-	                        <a href="javascript:addTagLayer();"><i class="fa fa-search nav_icon"></i>Add Tag</a>
-	              </label></td>
-	              </tr>
-	             </table>
+               <tr>
+                <td align="left"><label for="inputPassword" class="control-label">Tag</label></td>
+                <td align="right"><label for="inputPassword" class="control-label" style="text-align:right">
+                          <a href="javascript:addTagLayer();"><i class="fa fa-search nav_icon"></i>Add Tag</a>
+                </label></td>
+                </tr>
+               </table>
              <select name = 'book.tags[0].tagID' class="form-control">
              <s:iterator value = "tags" var = "tags" status = "sta">
                <option value ='<s:property value="%{#tags.tagID}" />'>
@@ -132,6 +133,34 @@
           </form>
           
         </div>
+        <div class="tab-pane" id="queryBook">
+        <div>
+        <form method="post" class="table" id = "queryForm">
+           <div class="form-group">
+              <div class="col-sm-2">
+               <s:select class="form-control"
+                list="#{'title':'Title', 'ISBN':'ISBN'}" 
+                name="msg" 
+                value="Title" />
+              </div>
+              <div class="col-sm-4">
+                <input name = "info"  class="form-control">
+               </div>
+               <div class="col-sm-3">
+               <button type="button" class="btn btn-default" onclick="queryBook()">
+                 Search
+               </button>
+              </div>
+            </div>
+          </form>
+          </div>
+          <div>
+          <br><br><br>
+            <h3 id = "resultH"></h3>
+            <table class="table table-striped" id = "queryResultTable">
+            </table>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -186,7 +215,7 @@
 </div>
 <script>
 function addTagLayer(){
-	layer.open({
+  layer.open({
         type:1,
         title:"Add Author",
         area:['400px','200px'],
@@ -203,6 +232,75 @@ function addAuthorLayer(){
               content:$("#authorLayer")
       });
 }
+function queryBook(){
+	$("#queryResultTable").empty();
+	$("#resultH").empty();
+  var formData = new FormData(document.getElementById("queryForm"));
+  $.ajax({
+		type : "post",
+		url : "actionQueryBook",
+		data : formData,
+		async : false,
+		cache : false,
+		contentType : false,
+		processData : false,
+		success : function(data){
+		 var obj = JSON.parse(data);
+		 if (obj.result.length == 0){
+			 alert("no result");
+		 }
+		 else{
+			 $("#resultH").append("Result:");
+			  var tableTitle = "<thead><tr><th>Title</th><th>ISBN</th><th>Quantity</th>"+
+				"<th>Author</th><th>Tag</th></tr></thead>";
+				$("#queryResultTable").append(tableTitle);
+				obj.result.forEach(function(book){
+					var bookItem = "<tr><td>"+book.title+"</td><td>"+book.ISBN+"</td><td>"+book.quantity+"</td><td>";
+					var j, len;
+					for(j = 0, len=book.authors.length; j < len; j++) {
+						  bookItem = bookItem + book.authors[j].firstName + " "+ book.authors[j].lastName;
+					}
+					bookItem = bookItem + "</td><td>";
+					for(j = 0, len=book.tags.length; j < len; j++) {
+						  bookItem = bookItem + book.tags[j].tag + " ";
+					}
+					bookItem = bookItem + "</td></tr>";
+					$("#queryResultTable").append(bookItem);
+					});
+		  }
+		},
+		error : function(e){
+		    alert("上传失败！");
+		  }
+		});
+}
+
+
+/*
+
+var showPlaceStr='${queryP}';
+var showPlace = eval('(' + showPlaceStr + ')');
+$.each(showPlace,function(place,pdo){
+      AMap.service('AMap.Geocoder',function(){//回调函数
+          geocoder = new AMap.Geocoder({
+          });
+      geocoder.getLocation(place, function (status, result) {
+        alert
+          if (status == 'complete' && result.geocodes.length) {
+                  //marker.setPosition(result.geocodes[0].location);
+                  var ss=result.geocodes[0].location
+                  var marker = new AMap.Marker({
+                      position: ss,
+                      map: mapShowAll
+                  });
+              }
+        });
+      })
+});
+
+
+*/
+
 </script>
 </body>
 </html>
