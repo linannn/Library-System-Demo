@@ -64,7 +64,6 @@
 					    <tr>
 					        <th>Title</th>
 					        <th>ISBN</th>
-					        <th>Quantity</th>
 					        <th>Author</th>
 					        <th>Tag</th>
 					    </tr>
@@ -74,7 +73,6 @@
 						    <tr>
 						    <td><s:property value="%{#book.title}" /></td>
 						    <td><s:property value="%{#book.ISBN}" /></td>
-						    <td><s:property value="%{#book.quantity}" /></td>
 						    <td>
 							    <s:iterator value="#book.authors" var="author" status="s">
 	                  <s:property value="%{#author.firstName}" /> <s:property value="%{#author.lastName}" />
@@ -97,7 +95,6 @@
               <tr>
                   <th>Title</th>
                   <th>ISBN</th>
-                  <th>Quantity</th>
                   <th>Author</th>
                   <th>Tag</th>
                   <th>Operation</th>
@@ -107,7 +104,6 @@
                   <tr>
                     <td style="vertical-align: middle"><s:property value="%{#book.title}" /></td>
                     <td style="vertical-align: middle"><s:property value="%{#book.ISBN}" /></td>
-                    <td style="vertical-align: middle"><s:property value="%{#book.quantity}" /></td>
                     <td style="vertical-align: middle">
 					            <s:iterator value="#book.authors" var="author" status="s">
 					              <s:property value="%{#author.firstName}" /> <s:property value="%{#author.lastName}" />

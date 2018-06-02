@@ -156,7 +156,7 @@ public class BookAction extends ActionSupport {
   }
   public String addBook() {
     int res = bs.addBook(book);
-    int resCopy = bs.addBookCopy(book.getISBN(), location, bookNumb);
+    int resCopy = bs.addBookCopy(book.getISBN(), location, Integer.parseInt(book.getQuantity()));
     if(res == -1 || resCopy == -1) {
       return "error";
     }

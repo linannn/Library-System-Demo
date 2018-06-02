@@ -83,10 +83,6 @@
               <label for="inputPassword" class="control-label">Location</label> <input
                 class="form-control" name="location">
             </div>
-            <div class="form-group">
-              <label for="inputPassword" class="control-label">Number</label> <input
-                class="form-control" name="bookNumb">
-            </div>
              <div align="center">
              <input type="submit" value="Add Book">
              <!-- 
@@ -217,7 +213,7 @@
 function addTagLayer(){
   layer.open({
         type:1,
-        title:"Add Author",
+        title:"Add Tag",
         area:['400px','200px'],
               shadeClose:true,
               content:$("#tagLayer")
