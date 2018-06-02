@@ -138,7 +138,7 @@
   
   
 <div id="authorLayer" style="display: none">
-  <form Class="form-horizontal" theme="simple" method="post"
+  <form action = "actionAddAuthor.action" Class="form-horizontal" theme="simple" method="post"
     id="authorForm" >
     <input type="hidden" name="userId" value='<s:property value = "userId"/>' />
     <br>
@@ -159,15 +159,13 @@
     <br>
     <div class="form-group">
       <div align="center">
-        <button type="button"
-          class="btn  btn-lg btn-primary  hvr-shutter-out-vertical"
-          onclick="jsonAddAuthor()">AddAuthor</button>
+        <input type="submit" class="btn  btn-lg btn-primary  hvr-shutter-out-vertical" value="Add Author">
       </div>
     </div>
   </form>
 </div>
 <div id="tagLayer" style="display: none">
-  <form Class="form-horizontal" theme="simple" method="post"
+  <form action = "actionAddTag.action" Class="form-horizontal" theme="simple" method="post"
     id="tagForm" >
     <input type="hidden" name="userId" value='<s:property value = "userId"/>' />
     <table id="pdo">
@@ -181,9 +179,7 @@
     <br>
     <div class="form-group">
       <div align="center">
-        <button type="button"
-          class="btn  btn-lg btn-primary  hvr-shutter-out-vertical"
-          onclick="addTagJson()">Add Tag</button>
+        <input type="submit" class="btn  btn-lg btn-primary  hvr-shutter-out-vertical" value="Add Tag">
       </div>
     </div>
   </form>
@@ -207,106 +203,6 @@ function addAuthorLayer(){
               content:$("#authorLayer")
       });
 }
-
-function addBookJson(){
-    var formData = new FormData(document.getElementById("bookForm"));
-      $.ajax({
-        type : "post",
-        url : 'actionAddBook',
-        data : formData,
-        async : false,
-        cache : false,
-        contentType : false,
-        processData : false,
-        success : function(data){
-          var obj = JSON.parse(data);
-          layer.open({
-                  type: 1,
-                  title:"Add Book Message",
-                  skin: 'layui-layer-demo',
-                  closeBtn: 0,
-                  anim: 2,
-                  area:['240px','120px'],
-                  shadeClose: true,
-                  content: obj.result,
-                  end:function (){
-                    location.reload();
-                  }
-                });
-   
-        },
-        error : function(e){
-          msg="上传失败！";
-        }
-      });
-      get();
-}
-function addTagJson(){
-		  var formData = new FormData(document.getElementById("tagForm"));
-		    $.ajax({
-		      type : "post",
-		      url : 'actionAddTag',
-		      data : formData,
-		      async : false,
-		      cache : false,
-		      contentType : false,
-		      processData : false,
-		      success : function(data){
-		        var obj = JSON.parse(data);
-		        layer.open({
-		                type: 1,
-		                title:"Add Tag Message",
-		                skin: 'layui-layer-demo',
-		                closeBtn: 0,
-		                anim: 2,
-		                area:['240px','120px'],
-		                shadeClose: true,
-		                content: obj.result,
-		                end:function (){
-		                  location.reload();
-		                }
-		              });
-		 
-		      },
-		      error : function(e){
-		        msg="上传失败！";
-		      }
-		    });
-		    get();
-}
-function jsonAddAuthor(){
-	var formData = new FormData(document.getElementById("authorForm"));
-    $.ajax({
-      type : "post",
-      url : 'actionAddAuthor',
-      data : formData,
-      async : false,
-      cache : false,
-      contentType : false,
-      processData : false,
-      success : function(data){
-        var obj = JSON.parse(data);
-        layer.open({
-                type: 1,
-                title:"Add Author Message",
-                skin: 'layui-layer-demo',
-                closeBtn: 0,
-                anim: 2,
-                area:['240px','120px'],
-                shadeClose: true,
-                content: obj.result,
-                end:function (){
-                  location.reload();
-                }
-              });
- 
-      },
-      error : function(e){
-        msg="上传失败！";
-      }
-    });
-    get();
-  }
 </script>
 </body>
 </html>

@@ -120,26 +120,16 @@ public class BookAction extends ActionSupport {
   
   public String addAuthor() {
     int res = as.addAuther(author);
-    Map<String, String> map = new HashMap<String,String>();
     if(res == -1) {
-      map.put("result", "Add Author Failed");
+      return "error";
     }
-    else {
-      map.put("result", "Add Author Succeed");
-    }
-    returnRes = JSONObject.fromObject(map).toString();
     return SUCCESS;
   }
   public String addTag() {
     int res = ts.addTag(tag);
-    Map<String, String> map = new HashMap<String,String>();
     if(res == -1) {
-      map.put("result", "Add Tag Failed");
+      return "error";
     }
-    else {
-      map.put("result", "Add Tag Succeed");
-    }
-    returnRes = JSONObject.fromObject(map).toString();
     return SUCCESS;
   }
   public String addBook() {
@@ -180,10 +170,10 @@ public class BookAction extends ActionSupport {
     int res = bs.renewBook(borrowerID, bookID);
     Map<String, String> map = new HashMap<String,String>();
     if(res == -1) {
-      map.put("result", "Add Tag Failed");
+      map.put("result", "Renew Failed");
     }
     else {
-      map.put("result", "Add Tag Succeed");
+      map.put("result", "Renew Succeed");
     }
     returnRes = JSONObject.fromObject(map).toString();
     return SUCCESS;

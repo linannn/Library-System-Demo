@@ -17,14 +17,12 @@
       <result>/librarian.jsp</result>
     </action>
     <action name = "actionAddAuthor" class = "action.BookAction" method = "addAuthor">
-      <result type="json">
-        <param name = "root">returnRes</param>
-      </result>
+      <result type="chain">actionLibrarianHome</result>
+      <result name = "error">/error.jsp</result>
     </action>
     <action name = "actionAddTag" class = "action.BookAction" method = "addTag">
-      <result type="json">
-        <param name = "root">returnRes</param>
-      </result>
+      <result type="chain">actionLibrarianHome</result>
+      <result name = "error">/error.jsp</result>
     </action>
     <action name = "actionAddBook" class = "action.BookAction" method = "addBook">
       <result type="chain">actionLibrarianHome</result>

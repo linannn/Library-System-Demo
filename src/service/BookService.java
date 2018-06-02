@@ -150,6 +150,7 @@ public class BookService {
     }catch(SQLException e) {
       e.printStackTrace();
     }
+    changeLimit(borrowID, -1);
     if (res == -1) {
         return -1;
     }
@@ -184,6 +185,7 @@ public class BookService {
     }catch(SQLException e) {
       e.printStackTrace();
     }
+    changeLimit(borrowID, 1);
     if (res == -1) {
         return -1;
     }
@@ -191,6 +193,44 @@ public class BookService {
       return -1;
     }
     return 1;
+  }
+  public int changeLimit(String uID, int numb) {
+    String sqlGetLimit = "select * from borrower where uID = ?";
+    String sql = "update borrower set borrower.limit = ? where uID = ?";
+    Connection conn = DBConn.getConnection();
+    PreparedStatement pst = null;
+    ResultSet rs = null;
+    int limit = 0;
+    int res = 1;
+    try {
+      pst = conn.prepareStatement(sqlGetLimit);
+      pst.setString(1, uID);
+      rs = pst.executeQuery();
+      if (rs.next()) {
+        limit = rs.getInt(6);
+      }
+      if(rs != null)
+        rs.close();
+      if(pst != null)
+        pst.close();
+    } catch(SQLException e) {
+      e.printStackTrace();
+    }
+    try {
+      pst = conn.prepareStatement(sql);
+      pst.setString(2, uID);
+      pst.setInt(1, limit+numb);
+      res = pst.executeUpdate();
+      if(rs != null)
+        rs.close();
+      if(pst != null)
+        pst.close();
+      if(conn != null)
+        conn.close();
+    } catch(SQLException e) {
+      e.printStackTrace();
+    }
+    return res;
   }
   public List<Book> getBorrowedBook(String borrowerID) {
     String sql = "select book_ISBN from borrow where uID = ? and last_time is not null";
